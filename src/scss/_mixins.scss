@@ -1,0 +1,70 @@
+@use 'variables' as *;
+
+@mixin mobile {
+  @media (max-width: $bp-mobile) { @content; }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card-base {
+  background: $bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-color;
+}
+
+@mixin page-container {
+  padding: $spacing-lg;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+
+  @include mobile {
+    padding: $spacing-md;
+  }
+}
+
+@mixin auth-page {
+  @include flex-center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 50%, #0d47a1 100%);
+  padding: $spacing-md;
+  box-sizing: border-box;
+}
+
+@mixin auth-card {
+  @include card-base;
+  width: 100%;
+  max-width: 440px;
+  padding: $spacing-2xl;
+  box-shadow: $shadow-lg;
+
+  @include mobile {
+    padding: $spacing-lg;
+    max-width: 100%;
+  }
+}
+
+@mixin scrollbar-thin {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $text-muted;
+    border-radius: $radius-full;
+  }
+}

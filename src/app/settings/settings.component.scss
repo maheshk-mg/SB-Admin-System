@@ -1,0 +1,252 @@
+@use '../../scss/variables' as *;
+@use '../../scss/mixins' as *;
+
+.settings-page {
+  @include page-container;
+}
+
+.page-header {
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    margin: 0 0 $spacing-xs;
+    font-size: $font-size-2xl;
+    font-weight: 600;
+    color: $text-primary;
+
+    @include mobile {
+      font-size: $font-size-xl;
+    }
+  }
+
+  p {
+    margin: 0;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+  }
+}
+
+.settings-tabs {
+  ::ng-deep .mat-mdc-tab-header {
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.tab-content {
+  padding-top: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.settings-card {
+  border-radius: $radius-md !important;
+  width: 100%;
+
+  mat-card-header {
+    padding: $spacing-lg $spacing-lg 0;
+  }
+
+  mat-card-content {
+    padding: $spacing-lg !important;
+  }
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+// ── Avatar Upload ────────────────────────────────
+.avatar-upload-section {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.avatar-preview {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: $radius-full;
+  overflow: hidden;
+  border: 3px solid $border-color;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  @include flex-center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: $text-on-primary;
+  font-size: $font-size-2xl;
+  font-weight: 700;
+}
+
+.avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.avatar-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: $font-size-base;
+    color: $text-primary;
+  }
+
+  span {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .file-name {
+    font-size: $font-size-xs;
+    color: $success;
+  }
+}
+
+.avatar-buttons {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+
+  button {
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: $spacing-xs;
+    }
+  }
+}
+
+.upload-hint {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+// ── Section Title ────────────────────────────────
+.section-title {
+  margin: 0;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+// ── Form Rows ────────────────────────────────────
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-row-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+
+  @media (max-width: $bp-tablet) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  padding-top: $spacing-sm;
+}
+
+// ── Toggle Group ─────────────────────────────────
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.toggle-item {
+  @include flex-between;
+  gap: $spacing-md;
+}
+
+.toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: $font-size-sm;
+    color: $text-primary;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+  }
+}
+
+// ── Security Section ─────────────────────────────
+.security-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.security-item {
+  @include flex-between;
+  gap: $spacing-md;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.security-info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  mat-icon {
+    color: $text-secondary;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      font-size: $font-size-sm;
+      color: $text-primary;
+    }
+
+    span {
+      font-size: $font-size-xs;
+      color: $text-secondary;
+    }
+  }
+}

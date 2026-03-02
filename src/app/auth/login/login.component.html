@@ -1,0 +1,61 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-icon">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </div>
+      <h1>Welcome Back</h1>
+      <p>Sign in to your admin dashboard</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error-banner">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
+        <mat-icon matPrefix>email</mat-icon>
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <mat-error>{{ getEmailError() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password"
+               [type]="hidePassword() ? 'password' : 'text'"
+               placeholder="Enter your password"
+               autocomplete="current-password">
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1">
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <mat-error>{{ getPasswordError() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-options">
+        <mat-checkbox formControlName="rememberMe" color="primary">Remember me</mat-checkbox>
+        <a routerLink="/login" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <mat-spinner diameter="20" color="accent"></mat-spinner>
+        } @else {
+          Sign In
+        }
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Don't have an account? <a routerLink="/register">Create one</a></p>
+    </div>
+  </div>
+</div>

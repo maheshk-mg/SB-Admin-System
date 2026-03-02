@@ -1,0 +1,56 @@
+@use '@angular/material' as mat;
+@use 'scss/variables' as *;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Inter,
+    density: 0,
+  ));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: $bg-light;
+  color: $text-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.mat-mdc-snack-bar-container {
+  &.snackbar-success .mdc-snackbar__surface {
+    background-color: $success;
+  }
+  &.snackbar-error .mdc-snackbar__surface {
+    background-color: $warn;
+  }
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}

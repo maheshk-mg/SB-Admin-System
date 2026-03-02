@@ -1,0 +1,127 @@
+<mat-sidenav-container class="dashboard-container">
+  <!-- Sidebar -->
+  <mat-sidenav #sidenav
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
+    [fixedInViewport]="isMobile()"
+    fixedTopGap="0"
+    class="dashboard-sidenav"
+    [class.collapsed]="collapsed()">
+
+    <div class="sidenav-header">
+      <div class="brand">
+        <mat-icon class="brand-icon">admin_panel_settings</mat-icon>
+        <span class="brand-text" [class.hidden]="collapsed()">Admin Panel</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-nav-list class="nav-list">
+      @for (item of navItems; track item.route) {
+        <a mat-list-item
+           [routerLink]="item.route"
+           routerLinkActive="active-link"
+           [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+           (click)="onNavClick()"
+           [matTooltip]="collapsed() ? item.label : ''"
+           matTooltipPosition="right"
+           class="nav-item">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle [class.hidden]="collapsed()">{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <mat-divider></mat-divider>
+      <mat-nav-list class="footer-nav">
+        <a mat-list-item (click)="logout()"
+           [matTooltip]="collapsed() ? 'Sign Out' : ''"
+           matTooltipPosition="right"
+           class="nav-item logout-item">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle [class.hidden]="collapsed()">Sign Out</span>
+        </a>
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content class="main-content"
+    [style.margin-left]="isMobile() ? null : (collapsed() ? '68px' : '260px')">
+    <!-- Toolbar -->
+    <mat-toolbar class="dashboard-toolbar">
+      <div class="toolbar-left">
+        <button mat-icon-button (click)="toggleSidenav()" matTooltip="Toggle menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <div class="toolbar-right">
+        <!-- Notifications -->
+        <button mat-icon-button [matMenuTriggerFor]="notifMenu" matTooltip="Notifications"
+                [matBadge]="notificationCount()" matBadgeColor="warn" matBadgeSize="small"
+                [matBadgeHidden]="notificationCount() === 0">
+          <mat-icon>notifications</mat-icon>
+        </button>
+
+        <mat-menu #notifMenu="matMenu" class="notification-menu">
+          <div class="menu-header" (click)="$event.stopPropagation()">
+            <strong>Notifications</strong>
+            <button mat-button color="primary" (click)="markAllRead()">Mark all read</button>
+          </div>
+          <mat-divider></mat-divider>
+          @for (notif of notifications; track notif.text) {
+            <button mat-menu-item class="notification-item" [class.unread]="!notif.read">
+              <mat-icon [class.notif-unread-icon]="!notif.read">{{ notif.icon }}</mat-icon>
+              <div class="notif-content">
+                <span class="notif-text">{{ notif.text }}</span>
+                <span class="notif-time">{{ notif.time }}</span>
+              </div>
+            </button>
+          }
+        </mat-menu>
+
+        <!-- Settings -->
+        <button mat-icon-button routerLink="/dashboard/settings" matTooltip="Settings">
+          <mat-icon>settings</mat-icon>
+        </button>
+
+        <!-- Profile -->
+        <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="profile-trigger" matTooltip="Account">
+          <div class="avatar">{{ auth.userInitials() }}</div>
+        </button>
+
+        <mat-menu #profileMenu="matMenu" xPosition="before">
+          <div class="profile-header" (click)="$event.stopPropagation()">
+            <div class="avatar avatar-lg">{{ auth.userInitials() }}</div>
+            <div class="profile-info">
+              <strong>{{ auth.fullName() }}</strong>
+              <span>{{ auth.user()?.email }}</span>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <!-- <button mat-menu-item routerLink="/dashboard">
+            <mat-icon>dashboard</mat-icon>
+            <span>Dashboard</span>
+          </button> -->
+          <button mat-menu-item routerLink="/dashboard/settings">
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Sign Out</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

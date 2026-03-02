@@ -1,0 +1,147 @@
+@use '../../../scss/variables' as *;
+@use '../../../scss/mixins' as *;
+
+.register-page {
+  @include auth-page;
+}
+
+.register-card {
+  @include auth-card;
+
+  & {
+    max-width: 520px;
+  }
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: $spacing-xl;
+
+  .logo-icon {
+    @include flex-center;
+    width: 64px;
+    height: 64px;
+    border-radius: $radius-md;
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    margin: 0 auto $spacing-md;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: $text-on-primary;
+    }
+  }
+
+  h1 {
+    margin: 0 0 $spacing-xs;
+    font-size: $font-size-2xl;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 0;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+  }
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  background: rgba($warn, 0.08);
+  border: 1px solid rgba($warn, 0.3);
+  color: $warn;
+  margin-bottom: $spacing-lg;
+  font-size: $font-size-sm;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: $spacing-xs;
+  }
+}
+
+.terms-row {
+  margin: $spacing-sm 0 $spacing-md;
+
+  a {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ::ng-deep .mat-mdc-checkbox .mdc-label {
+    font-size: $font-size-sm;
+    line-height: 1.5;
+  }
+}
+
+.terms-error {
+  margin: $spacing-xs 0 0;
+  font-size: $font-size-xs;
+  color: $warn;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: $font-size-base;
+  font-weight: 500;
+  border-radius: $radius-sm;
+  letter-spacing: 0.3px;
+  margin-top: $spacing-sm;
+
+  mat-spinner {
+    display: inline-block;
+  }
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $divider-color;
+
+  p {
+    margin: 0;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+
+    a {
+      color: $primary;
+      font-weight: 500;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

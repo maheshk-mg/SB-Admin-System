@@ -1,0 +1,27 @@
+@use '../../scss/variables' as *;
+@use '../../scss/mixins' as *;
+
+.dashboard-page {
+  @include page-container;
+}
+
+.page-header {
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    margin: 0 0 $spacing-xs;
+    font-size: $font-size-2xl;
+    font-weight: 600;
+    color: $text-primary;
+
+    @include mobile {
+      font-size: $font-size-xl;
+    }
+  }
+
+  p {
+    margin: 0;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+  }
+}
