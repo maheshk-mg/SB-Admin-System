@@ -6,310 +6,405 @@
 
   <mat-tab-group animationDuration="200ms" class="settings-tabs">
     <!-- Profile Tab -->
-    <mat-tab label="Profile">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </ng-template>
       <div class="tab-content">
-        <!-- Avatar / Image Upload Card -->
-        <mat-card appearance="outlined" class="settings-card">
-          <mat-card-header>
-            <mat-card-title>Profile Photo</mat-card-title>
-            <mat-card-subtitle>Upload a profile picture to personalize your account</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="avatar-upload-section">
-              <div class="avatar-preview">
-                @if (avatarPreview()) {
-                  <img [src]="avatarPreview()" alt="Profile photo" class="avatar-image">
-                } @else {
-                  <div class="avatar-placeholder">{{ auth.userInitials() }}</div>
+        <!-- Avatar Card -->
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon green">
+              <mat-icon>camera_alt</mat-icon>
+            </div>
+            <div>
+              <h3>Profile Photo</h3>
+              <p>Upload a picture to personalize your account</p>
+            </div>
+          </div>
+          <div class="avatar-upload-section">
+            <div class="avatar-preview">
+              @if (avatarPreview()) {
+                <img [src]="avatarPreview()" alt="Profile photo" class="avatar-image">
+              } @else {
+                <div class="avatar-placeholder">{{ auth.userInitials() }}</div>
+              }
+            </div>
+            <div class="avatar-actions">
+              <div class="avatar-details">
+                <strong>{{ auth.fullName() }}</strong>
+                <span>{{ auth.user()?.email }}</span>
+                @if (avatarFileName()) {
+                  <span class="file-name">{{ avatarFileName() }}</span>
                 }
               </div>
-              <div class="avatar-actions">
-                <div class="avatar-details">
-                  <strong>{{ auth.fullName() }}</strong>
-                  <span>{{ auth.user()?.email }}</span>
-                  @if (avatarFileName()) {
-                    <span class="file-name">{{ avatarFileName() }}</span>
-                  }
-                </div>
-                <div class="avatar-buttons">
-                  <button mat-flat-button color="primary" (click)="fileInput.click()">
-                    <mat-icon>upload</mat-icon>
-                    Upload Photo
-                  </button>
-                  <input #fileInput type="file" accept="image/*" hidden (change)="onAvatarSelected($event)">
-                  @if (avatarPreview()) {
-                    <button mat-stroked-button color="warn" (click)="removeAvatar()">
-                      <mat-icon>delete</mat-icon>
-                      Remove
-                    </button>
-                  }
-                </div>
-                <span class="upload-hint">JPG, PNG or GIF. Max size 2MB.</span>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-
-        <!-- Personal Information Card -->
-        <mat-card appearance="outlined" class="settings-card">
-          <mat-card-header>
-            <mat-card-title>Personal Information</mat-card-title>
-            <mat-card-subtitle>Update your personal details and contact info</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="settings-form">
-              <div class="form-row">
-                <mat-form-field appearance="outline">
-                  <mat-label>First Name</mat-label>
-                  <input matInput formControlName="firstName">
-                  @if (profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
-                    <mat-error>First name is required</mat-error>
-                  }
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Last Name</mat-label>
-                  <input matInput formControlName="lastName">
-                  @if (profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
-                    <mat-error>Last name is required</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field appearance="outline">
-                  <mat-label>Email</mat-label>
-                  <input matInput formControlName="email" type="email">
-                  @if (profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched) {
-                    <mat-error>Enter a valid email</mat-error>
-                  }
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Phone Number</mat-label>
-                  <input matInput formControlName="phone" type="tel" placeholder="+1 (555) 000-0000">
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field appearance="outline">
-                  <mat-label>Company</mat-label>
-                  <input matInput formControlName="company" placeholder="Your company name">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Role</mat-label>
-                  <mat-select formControlName="role">
-                    @for (r of roles; track r) {
-                      <mat-option [value]="r">{{ r }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Website</mat-label>
-                <input matInput formControlName="website" placeholder="https://yourwebsite.com">
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Bio</mat-label>
-                <textarea matInput formControlName="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
-              </mat-form-field>
-
-              <mat-divider></mat-divider>
-
-              <h3 class="section-title">Address</h3>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Street Address</mat-label>
-                <input matInput formControlName="address" placeholder="123 Main Street">
-              </mat-form-field>
-
-              <div class="form-row form-row-3">
-                <mat-form-field appearance="outline">
-                  <mat-label>City</mat-label>
-                  <input matInput formControlName="city">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Country</mat-label>
-                  <input matInput formControlName="country">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>ZIP Code</mat-label>
-                  <input matInput formControlName="zipCode">
-                </mat-form-field>
-              </div>
-
-              <mat-divider></mat-divider>
-
-              <h3 class="section-title">Preferences</h3>
-
-              <div class="form-row">
-                <mat-form-field appearance="outline">
-                  <mat-label>Language</mat-label>
-                  <mat-select formControlName="language">
-                    @for (lang of languages; track lang) {
-                      <mat-option [value]="lang">{{ lang }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Timezone</mat-label>
-                  <mat-select formControlName="timezone">
-                    @for (tz of timezones; track tz) {
-                      <mat-option [value]="tz">{{ tz }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-              <div class="form-actions">
-                <button mat-stroked-button type="button">Cancel</button>
-                <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
-                  {{ saving() ? 'Saving...' : 'Save Changes' }}
+              <div class="avatar-buttons">
+                <button mat-flat-button (click)="fileInput.click()" class="btn-dark">
+                  <mat-icon>upload</mat-icon>
+                  Upload Photo
                 </button>
+                <input #fileInput type="file" accept="image/*" hidden (change)="onAvatarSelected($event)">
+                @if (avatarPreview()) {
+                  <button mat-stroked-button color="warn" (click)="removeAvatar()">
+                    <mat-icon>delete</mat-icon>
+                    Remove
+                  </button>
+                }
               </div>
-            </form>
-          </mat-card-content>
-        </mat-card>
+              <span class="upload-hint">JPG, PNG or GIF. Max size 2MB.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Info Card -->
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon blue">
+              <mat-icon>badge</mat-icon>
+            </div>
+            <div>
+              <h3>Personal Information</h3>
+              <p>Update your name, contact, and company details</p>
+            </div>
+          </div>
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="settings-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName">
+                @if (profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
+                  <mat-error>First name is required</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName">
+                @if (profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
+                  <mat-error>Last name is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email">
+                @if (profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched) {
+                  <mat-error>Enter a valid email</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="phone" type="tel" placeholder="+1 (555) 000-0000">
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Company</mat-label>
+                <input matInput formControlName="company" placeholder="Your company name">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Role</mat-label>
+                <mat-select formControlName="role">
+                  @for (r of roles; track r) {
+                    <mat-option [value]="r">{{ r }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Website</mat-label>
+              <input matInput formControlName="website" placeholder="https://yourwebsite.com">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Bio</mat-label>
+              <textarea matInput formControlName="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+            </mat-form-field>
+            <div class="form-actions">
+              <button mat-stroked-button type="button">Cancel</button>
+              <button mat-flat-button type="submit" class="btn-dark" [disabled]="saving()">
+                {{ saving() ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Address Card -->
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon orange">
+              <mat-icon>location_on</mat-icon>
+            </div>
+            <div>
+              <h3>Address</h3>
+              <p>Your mailing and billing address</p>
+            </div>
+          </div>
+          <form [formGroup]="profileForm" class="settings-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Street Address</mat-label>
+              <input matInput formControlName="address" placeholder="123 Main Street">
+            </mat-form-field>
+            <div class="form-row form-row-3">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Country</mat-label>
+                <input matInput formControlName="country">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>ZIP Code</mat-label>
+                <input matInput formControlName="zipCode">
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+
+        <!-- Preferences Card -->
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon purple">
+              <mat-icon>language</mat-icon>
+            </div>
+            <div>
+              <h3>Preferences</h3>
+              <p>Language and timezone settings</p>
+            </div>
+          </div>
+          <form [formGroup]="profileForm" class="settings-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Language</mat-label>
+                <mat-select formControlName="language">
+                  @for (lang of languages; track lang) {
+                    <mat-option [value]="lang">{{ lang }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Timezone</mat-label>
+                <mat-select formControlName="timezone">
+                  @for (tz of timezones; track tz) {
+                    <mat-option [value]="tz">{{ tz }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
       </div>
     </mat-tab>
 
     <!-- Notifications Tab -->
-    <mat-tab label="Notifications">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>notifications</mat-icon>
+        <span>Notifications</span>
+      </ng-template>
       <div class="tab-content">
-        <mat-card appearance="outlined" class="settings-card">
-          <mat-card-header>
-            <mat-card-title>Notification Preferences</mat-card-title>
-            <mat-card-subtitle>Choose what notifications you receive</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <form [formGroup]="notificationForm" (ngSubmit)="saveNotifications()" class="settings-form">
-              <div class="toggle-group">
-                <div class="toggle-item">
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon blue">
+              <mat-icon>mail</mat-icon>
+            </div>
+            <div>
+              <h3>Email & Push</h3>
+              <p>Control how you receive notifications</p>
+            </div>
+          </div>
+          <form [formGroup]="notificationForm" (ngSubmit)="saveNotifications()">
+            <div class="toggle-group">
+              <div class="toggle-item">
+                <div class="toggle-left">
+                  <div class="toggle-icon blue">
+                    <mat-icon>email</mat-icon>
+                  </div>
                   <div class="toggle-info">
                     <strong>Email Notifications</strong>
                     <span>Receive notifications via email</span>
                   </div>
-                  <mat-slide-toggle formControlName="emailNotifications" color="primary"></mat-slide-toggle>
                 </div>
+                <mat-slide-toggle formControlName="emailNotifications" color="primary"></mat-slide-toggle>
+              </div>
 
-                <mat-divider></mat-divider>
-
-                <div class="toggle-item">
+              <div class="toggle-item">
+                <div class="toggle-left">
+                  <div class="toggle-icon green">
+                    <mat-icon>notifications_active</mat-icon>
+                  </div>
                   <div class="toggle-info">
                     <strong>Push Notifications</strong>
                     <span>Receive push notifications in browser</span>
                   </div>
-                  <mat-slide-toggle formControlName="pushNotifications" color="primary"></mat-slide-toggle>
                 </div>
+                <mat-slide-toggle formControlName="pushNotifications" color="primary"></mat-slide-toggle>
+              </div>
+            </div>
+          </form>
+        </div>
 
-                <mat-divider></mat-divider>
-
-                <div class="toggle-item">
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon orange">
+              <mat-icon>tune</mat-icon>
+            </div>
+            <div>
+              <h3>Activity Alerts</h3>
+              <p>Choose which activities trigger notifications</p>
+            </div>
+          </div>
+          <form [formGroup]="notificationForm" (ngSubmit)="saveNotifications()">
+            <div class="toggle-group">
+              <div class="toggle-item">
+                <div class="toggle-left">
+                  <div class="toggle-icon orange">
+                    <mat-icon>local_shipping</mat-icon>
+                  </div>
                   <div class="toggle-info">
                     <strong>Order Updates</strong>
                     <span>Get notified about order status changes</span>
                   </div>
-                  <mat-slide-toggle formControlName="orderUpdates" color="primary"></mat-slide-toggle>
                 </div>
+                <mat-slide-toggle formControlName="orderUpdates" color="primary"></mat-slide-toggle>
+              </div>
 
-                <mat-divider></mat-divider>
-
-                <div class="toggle-item">
+              <div class="toggle-item">
+                <div class="toggle-left">
+                  <div class="toggle-icon red">
+                    <mat-icon>gpp_good</mat-icon>
+                  </div>
                   <div class="toggle-info">
                     <strong>Security Alerts</strong>
                     <span>Important security-related notifications</span>
                   </div>
-                  <mat-slide-toggle formControlName="securityAlerts" color="primary"></mat-slide-toggle>
                 </div>
+                <mat-slide-toggle formControlName="securityAlerts" color="primary"></mat-slide-toggle>
+              </div>
 
-                <mat-divider></mat-divider>
-
-                <div class="toggle-item">
+              <div class="toggle-item">
+                <div class="toggle-left">
+                  <div class="toggle-icon purple">
+                    <mat-icon>newspaper</mat-icon>
+                  </div>
                   <div class="toggle-info">
                     <strong>Newsletter</strong>
                     <span>Weekly digest and product news</span>
                   </div>
-                  <mat-slide-toggle formControlName="newsletter" color="primary"></mat-slide-toggle>
                 </div>
+                <mat-slide-toggle formControlName="newsletter" color="primary"></mat-slide-toggle>
+              </div>
 
-                <mat-divider></mat-divider>
-
-                <div class="toggle-item">
+              <div class="toggle-item">
+                <div class="toggle-left">
+                  <div class="toggle-icon blue">
+                    <mat-icon>system_update</mat-icon>
+                  </div>
                   <div class="toggle-info">
                     <strong>Product Updates</strong>
                     <span>New feature announcements and updates</span>
                   </div>
-                  <mat-slide-toggle formControlName="productUpdates" color="primary"></mat-slide-toggle>
                 </div>
+                <mat-slide-toggle formControlName="productUpdates" color="primary"></mat-slide-toggle>
               </div>
+            </div>
 
-              <div class="form-actions">
-                <button mat-stroked-button type="button">Cancel</button>
-                <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
-                  {{ saving() ? 'Saving...' : 'Save Preferences' }}
-                </button>
-              </div>
-            </form>
-          </mat-card-content>
-        </mat-card>
+            <div class="form-actions">
+              <button mat-stroked-button type="button">Cancel</button>
+              <button mat-flat-button type="submit" class="btn-dark" [disabled]="saving()">
+                {{ saving() ? 'Saving...' : 'Save Preferences' }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </mat-tab>
 
     <!-- Security Tab -->
-    <mat-tab label="Security">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>shield</mat-icon>
+        <span>Security</span>
+      </ng-template>
       <div class="tab-content">
-        <mat-card appearance="outlined" class="settings-card">
-          <mat-card-header>
-            <mat-card-title>Password & Security</mat-card-title>
-            <mat-card-subtitle>Manage your password and security settings</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="security-section">
-              <div class="security-item">
-                <div class="security-info">
-                  <mat-icon>lock</mat-icon>
-                  <div>
-                    <strong>Change Password</strong>
-                    <span>Last changed 30 days ago</span>
-                  </div>
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon red">
+              <mat-icon>lock</mat-icon>
+            </div>
+            <div>
+              <h3>Password</h3>
+              <p>Keep your account secure with a strong password</p>
+            </div>
+          </div>
+          <div class="security-list">
+            <div class="security-item">
+              <div class="security-left">
+                <div class="security-icon orange">
+                  <mat-icon>vpn_key</mat-icon>
                 </div>
-                <button mat-stroked-button color="primary">Change</button>
+                <div class="security-info">
+                  <strong>Change Password</strong>
+                  <span>Last changed 30 days ago</span>
+                </div>
               </div>
+              <button mat-flat-button class="btn-dark">Change</button>
+            </div>
+          </div>
+        </div>
 
-              <mat-divider></mat-divider>
-
-              <div class="security-item">
-                <div class="security-info">
-                  <mat-icon>security</mat-icon>
-                  <div>
-                    <strong>Two-Factor Authentication</strong>
-                    <span>Add an extra layer of security</span>
-                  </div>
-                </div>
-                <button mat-stroked-button color="primary">Enable</button>
-              </div>
-
-              <mat-divider></mat-divider>
-
-              <div class="security-item">
-                <div class="security-info">
-                  <mat-icon>devices</mat-icon>
-                  <div>
-                    <strong>Active Sessions</strong>
-                    <span>1 active session</span>
-                  </div>
-                </div>
-                <button mat-stroked-button>View All</button>
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon green">
+              <mat-icon>verified_user</mat-icon>
+            </div>
+            <div>
+              <h3>Two-Factor Authentication</h3>
+              <p>Add an extra layer of protection to your account</p>
+            </div>
+          </div>
+          <div class="tfa-banner">
+            <div class="tfa-content">
+              <mat-icon>security</mat-icon>
+              <div>
+                <strong>2FA is not enabled</strong>
+                <p>Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to sign in.</p>
               </div>
             </div>
-          </mat-card-content>
-        </mat-card>
+            <button mat-flat-button class="btn-green">Enable 2FA</button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="card-header">
+            <div class="card-icon blue">
+              <mat-icon>devices</mat-icon>
+            </div>
+            <div>
+              <h3>Active Sessions</h3>
+              <p>Manage devices where you're currently signed in</p>
+            </div>
+          </div>
+          <div class="session-list">
+            <div class="session-item current">
+              <div class="session-left">
+                <div class="session-icon">
+                  <mat-icon>computer</mat-icon>
+                </div>
+                <div class="session-info">
+                  <strong>Current Session</strong>
+                  <span>Linux - Chrome</span>
+                  <span class="session-meta">Active now</span>
+                </div>
+              </div>
+              <span class="session-badge active">Active</span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button mat-stroked-button color="warn">Sign Out All Other Sessions</button>
+          </div>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>

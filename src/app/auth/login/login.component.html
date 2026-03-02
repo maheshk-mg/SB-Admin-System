@@ -1,61 +1,92 @@
-<div class="login-page">
-  <div class="login-card">
-    <div class="login-header">
-      <div class="logo-icon">
+<div class="auth-wrapper">
+  <!-- Left Panel - Branding -->
+  <div class="auth-branding">
+    <div class="branding-content">
+      <div class="brand-logo">
         <mat-icon>admin_panel_settings</mat-icon>
       </div>
-      <h1>Welcome Back</h1>
-      <p>Sign in to your admin dashboard</p>
+      <h2>SB Admin System</h2>
+      <p>Manage your business with powerful tools, real-time analytics, and a beautiful interface.</p>
+      <div class="brand-features">
+        <div class="feature">
+          <mat-icon>speed</mat-icon>
+          <span>Lightning Fast</span>
+        </div>
+        <div class="feature">
+          <mat-icon>shield</mat-icon>
+          <span>Secure by Default</span>
+        </div>
+        <div class="feature">
+          <mat-icon>devices</mat-icon>
+          <span>Works Everywhere</span>
+        </div>
+      </div>
     </div>
+    <div class="branding-dots">
+      <div class="dot dot-1"></div>
+      <div class="dot dot-2"></div>
+      <div class="dot dot-3"></div>
+    </div>
+  </div>
 
-    @if (errorMessage()) {
-      <div class="error-banner">
-        <mat-icon>error_outline</mat-icon>
-        <span>{{ errorMessage() }}</span>
+  <!-- Right Panel - Form -->
+  <div class="auth-form-panel">
+    <div class="form-container">
+      <div class="form-header">
+        <h1>Welcome Back</h1>
+        <p>Enter your credentials to access your dashboard</p>
       </div>
-    }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
-      <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
-        <mat-icon matPrefix>email</mat-icon>
-        @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <mat-error>{{ getEmailError() }}</mat-error>
-        }
-      </mat-form-field>
+      @if (errorMessage()) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
 
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password"
-               [type]="hidePassword() ? 'password' : 'text'"
-               placeholder="Enter your password"
-               autocomplete="current-password">
-        <mat-icon matPrefix>lock</mat-icon>
-        <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1">
-          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
+          <mat-icon matPrefix>email</mat-icon>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <mat-error>{{ getEmailError() }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password"
+                 [type]="hidePassword() ? 'password' : 'text'"
+                 placeholder="Enter your password"
+                 autocomplete="current-password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <mat-error>{{ getPasswordError() }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-options">
+          <mat-checkbox formControlName="rememberMe" color="primary">Remember me</mat-checkbox>
+          <a routerLink="/login" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Sign In
+            <mat-icon>arrow_forward</mat-icon>
+          }
         </button>
-        @if (form.get('password')?.invalid && form.get('password')?.touched) {
-          <mat-error>{{ getPasswordError() }}</mat-error>
-        }
-      </mat-form-field>
+      </form>
 
-      <div class="form-options">
-        <mat-checkbox formControlName="rememberMe" color="primary">Remember me</mat-checkbox>
-        <a routerLink="/login" class="forgot-link">Forgot password?</a>
+      <div class="auth-footer">
+        <p>Don't have an account? <a routerLink="/register">Create one</a></p>
       </div>
-
-      <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading()">
-        @if (isLoading()) {
-          <mat-spinner diameter="20" color="accent"></mat-spinner>
-        } @else {
-          Sign In
-        }
-      </button>
-    </form>
-
-    <div class="login-footer">
-      <p>Don't have an account? <a routerLink="/register">Create one</a></p>
     </div>
   </div>
 </div>

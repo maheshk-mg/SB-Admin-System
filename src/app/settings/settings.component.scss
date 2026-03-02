@@ -11,7 +11,7 @@
   h1 {
     margin: 0 0 $spacing-xs;
     font-size: $font-size-2xl;
-    font-weight: 600;
+    font-weight: 700;
     color: $text-primary;
 
     @include mobile {
@@ -26,36 +26,124 @@
   }
 }
 
+// ── Tabs ─────────────────────────────────────────
 .settings-tabs {
   ::ng-deep .mat-mdc-tab-header {
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-md;
+    border-bottom: 1px solid $border-color;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__content {
+    gap: $spacing-sm;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-weight: 500;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
   }
 }
 
 .tab-content {
-  padding-top: $spacing-md;
+  padding-top: $spacing-lg;
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
 }
 
-.settings-card {
-  border-radius: $radius-md !important;
-  width: 100%;
-
-  mat-card-header {
-    padding: $spacing-lg $spacing-lg 0;
-  }
-
-  mat-card-content {
-    padding: $spacing-lg !important;
-  }
-}
-
-.settings-form {
+// ── Section Card ─────────────────────────────────
+.section-card {
+  background: #ffffff;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  h3 {
+    margin: 0;
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: $font-size-xs;
+    color: $text-secondary;
+  }
+}
+
+.card-icon {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+  }
+  &.blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+  }
+  &.orange {
+    background: rgba(249, 115, 22, 0.1);
+    color: #ea580c;
+  }
+  &.purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: #7c3aed;
+  }
+  &.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+}
+
+// ── Buttons ──────────────────────────────────────
+.btn-dark {
+  background: #171717 !important;
+  color: #ffffff !important;
+
+  &:hover:not([disabled]) {
+    background: #262626 !important;
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+}
+
+.btn-green {
+  background: #059669 !important;
+  color: #ffffff !important;
+
+  &:hover {
+    background: #047857 !important;
+  }
 }
 
 // ── Avatar Upload ────────────────────────────────
@@ -72,8 +160,8 @@
 
 .avatar-preview {
   flex-shrink: 0;
-  width: 96px;
-  height: 96px;
+  width: 88px;
+  height: 88px;
   border-radius: $radius-full;
   overflow: hidden;
   border: 3px solid $border-color;
@@ -90,7 +178,7 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #10b981, #059669);
-  color: $text-on-primary;
+  color: #ffffff;
   font-size: $font-size-2xl;
   font-weight: 700;
 }
@@ -127,13 +215,11 @@
   gap: $spacing-sm;
   flex-wrap: wrap;
 
-  button {
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      margin-right: $spacing-xs;
-    }
+  button mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: $spacing-xs;
   }
 }
 
@@ -142,15 +228,13 @@
   color: $text-muted;
 }
 
-// ── Section Title ────────────────────────────────
-.section-title {
-  margin: 0;
-  font-size: $font-size-base;
-  font-weight: 600;
-  color: $text-primary;
+// ── Form ─────────────────────────────────────────
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
 }
 
-// ── Form Rows ────────────────────────────────────
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -184,12 +268,59 @@
 .toggle-group {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 0;
 }
 
 .toggle-item {
   @include flex-between;
   gap: $spacing-md;
+  padding: $spacing-md 0;
+  border-bottom: 1px solid $divider-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.toggle-left {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.toggle-icon {
+  @include flex-center;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+  }
+  &.blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+  }
+  &.orange {
+    background: rgba(249, 115, 22, 0.1);
+    color: #ea580c;
+  }
+  &.purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: #7c3aed;
+  }
+  &.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
 }
 
 .toggle-info {
@@ -200,6 +331,7 @@
   strong {
     font-size: $font-size-sm;
     color: $text-primary;
+    font-weight: 600;
   }
 
   span {
@@ -208,16 +340,16 @@
   }
 }
 
-// ── Security Section ─────────────────────────────
-.security-section {
+// ── Security ─────────────────────────────────────
+.security-list {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
 }
 
 .security-item {
   @include flex-between;
   gap: $spacing-md;
+  padding: $spacing-md 0;
 
   @include mobile {
     flex-direction: column;
@@ -225,28 +357,162 @@
   }
 }
 
-.security-info {
+.security-left {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: $spacing-md;
+}
+
+.security-icon {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
 
   mat-icon {
-    color: $text-secondary;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 
-  div {
-    display: flex;
+  &.orange {
+    background: rgba(249, 115, 22, 0.1);
+    color: #ea580c;
+  }
+}
+
+.security-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: $font-size-sm;
+    color: $text-primary;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+  }
+}
+
+// ── 2FA Banner ───────────────────────────────────
+.tfa-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-lg;
+  padding: $spacing-lg;
+  background: rgba(16, 185, 129, 0.04);
+  border: 1px dashed rgba(16, 185, 129, 0.3);
+  border-radius: $radius-sm;
+
+  @include mobile {
     flex-direction: column;
-    gap: 2px;
+    align-items: flex-start;
+  }
+}
 
-    strong {
-      font-size: $font-size-sm;
-      color: $text-primary;
-    }
+.tfa-content {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
 
-    span {
-      font-size: $font-size-xs;
-      color: $text-secondary;
-    }
+  > mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #059669;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  strong {
+    display: block;
+    font-size: $font-size-sm;
+    color: $text-primary;
+    font-weight: 600;
+    margin-bottom: $spacing-xs;
+  }
+
+  p {
+    margin: 0;
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    line-height: 1.5;
+  }
+}
+
+// ── Session List ─────────────────────────────────
+.session-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.session-item {
+  @include flex-between;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  background: #fafafa;
+  border: 1px solid $border-color;
+}
+
+.session-left {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.session-icon {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: $font-size-sm;
+    color: $text-primary;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+  }
+}
+
+.session-meta {
+  color: #059669 !important;
+  font-weight: 500;
+}
+
+.session-badge {
+  padding: 4px 12px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: 600;
+
+  &.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
   }
 }

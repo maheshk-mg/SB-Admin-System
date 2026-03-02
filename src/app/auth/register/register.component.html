@@ -1,100 +1,131 @@
-<div class="register-page">
-  <div class="register-card">
-    <div class="register-header">
-      <div class="logo-icon">
+<div class="auth-wrapper">
+  <!-- Left Panel - Branding -->
+  <div class="auth-branding">
+    <div class="branding-content">
+      <div class="brand-logo">
         <mat-icon>admin_panel_settings</mat-icon>
       </div>
-      <h1>Create Account</h1>
-      <p>Get started with your admin dashboard</p>
+      <h2>Join SB Admin</h2>
+      <p>Create your account and get access to powerful admin tools designed for modern teams.</p>
+      <div class="brand-stats">
+        <div class="stat">
+          <strong>10K+</strong>
+          <span>Active Users</span>
+        </div>
+        <div class="stat">
+          <strong>99.9%</strong>
+          <span>Uptime</span>
+        </div>
+        <div class="stat">
+          <strong>24/7</strong>
+          <span>Support</span>
+        </div>
+      </div>
     </div>
+    <div class="branding-dots">
+      <div class="dot dot-1"></div>
+      <div class="dot dot-2"></div>
+      <div class="dot dot-3"></div>
+    </div>
+  </div>
 
-    @if (errorMessage()) {
-      <div class="error-banner">
-        <mat-icon>error_outline</mat-icon>
-        <span>{{ errorMessage() }}</span>
+  <!-- Right Panel - Form -->
+  <div class="auth-form-panel">
+    <div class="form-container">
+      <div class="form-header">
+        <h1>Create Account</h1>
+        <p>Fill in your details to get started</p>
       </div>
-    }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
-      <div class="name-row">
+      @if (errorMessage()) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="name-row">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="John" autocomplete="given-name">
+            <mat-icon matPrefix>person</mat-icon>
+            @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
+              <mat-error>{{ getFieldError('firstName') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="Doe" autocomplete="family-name">
+            <mat-icon matPrefix>person_outline</mat-icon>
+            @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
+              <mat-error>{{ getFieldError('lastName') }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
         <mat-form-field appearance="outline">
-          <mat-label>First Name</mat-label>
-          <input matInput formControlName="firstName" placeholder="John" autocomplete="given-name">
-          <mat-icon matPrefix>person</mat-icon>
-          @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
-            <mat-error>{{ getFieldError('firstName') }}</mat-error>
+          <mat-label>Email Address</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
+          <mat-icon matPrefix>email</mat-icon>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <mat-error>{{ getFieldError('email') }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Last Name</mat-label>
-          <input matInput formControlName="lastName" placeholder="Doe" autocomplete="family-name">
-          <mat-icon matPrefix>person_outline</mat-icon>
-          @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
-            <mat-error>{{ getFieldError('lastName') }}</mat-error>
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password"
+                 [type]="hidePassword() ? 'password' : 'text'"
+                 placeholder="Min 8 chars, upper, lower & number"
+                 autocomplete="new-password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <mat-error>{{ getFieldError('password') }}</mat-error>
           }
         </mat-form-field>
-      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
-        <mat-icon matPrefix>email</mat-icon>
-        @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <mat-error>{{ getFieldError('email') }}</mat-error>
-        }
-      </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput formControlName="confirmPassword"
+                 [type]="hideConfirm() ? 'password' : 'text'"
+                 placeholder="Re-enter your password"
+                 autocomplete="new-password">
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="toggleConfirm()" tabindex="-1">
+            <mat-icon>{{ hideConfirm() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if ((form.get('confirmPassword')?.touched) && (form.get('confirmPassword')?.invalid || form.hasError('passwordMismatch'))) {
+            <mat-error>{{ getConfirmError() }}</mat-error>
+          }
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password"
-               [type]="hidePassword() ? 'password' : 'text'"
-               placeholder="Create a strong password"
-               autocomplete="new-password">
-        <mat-icon matPrefix>lock</mat-icon>
-        <button mat-icon-button matSuffix type="button" (click)="togglePassword()" tabindex="-1">
-          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        <div class="terms-row">
+          <mat-checkbox formControlName="acceptTerms" color="primary">
+            I agree to the <a href="javascript:void(0)">Terms of Service</a> and <a href="javascript:void(0)">Privacy Policy</a>
+          </mat-checkbox>
+          @if (form.get('acceptTerms')?.touched && form.get('acceptTerms')?.invalid) {
+            <p class="terms-error">You must accept the terms to continue</p>
+          }
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Create Account
+            <mat-icon>arrow_forward</mat-icon>
+          }
         </button>
-        @if (form.get('password')?.invalid && form.get('password')?.touched) {
-          <mat-error>{{ getFieldError('password') }}</mat-error>
-        }
-      </mat-form-field>
+      </form>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput formControlName="confirmPassword"
-               [type]="hideConfirm() ? 'password' : 'text'"
-               placeholder="Re-enter your password"
-               autocomplete="new-password">
-        <mat-icon matPrefix>lock_outline</mat-icon>
-        <button mat-icon-button matSuffix type="button" (click)="toggleConfirm()" tabindex="-1">
-          <mat-icon>{{ hideConfirm() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        @if ((form.get('confirmPassword')?.touched) && (form.get('confirmPassword')?.invalid || form.hasError('passwordMismatch'))) {
-          <mat-error>{{ getConfirmError() }}</mat-error>
-        }
-      </mat-form-field>
-
-      <div class="terms-row">
-        <mat-checkbox formControlName="acceptTerms" color="primary">
-          I agree to the <a href="javascript:void(0)">Terms of Service</a> and <a href="javascript:void(0)">Privacy Policy</a>
-        </mat-checkbox>
-        @if (form.get('acceptTerms')?.touched && form.get('acceptTerms')?.invalid) {
-          <p class="terms-error">You must accept the terms to continue</p>
-        }
+      <div class="auth-footer">
+        <p>Already have an account? <a routerLink="/login">Sign in</a></p>
       </div>
-
-      <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading()">
-        @if (isLoading()) {
-          <mat-spinner diameter="20" color="accent"></mat-spinner>
-        } @else {
-          Create Account
-        }
-      </button>
-    </form>
-
-    <div class="register-footer">
-      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
     </div>
   </div>
 </div>
