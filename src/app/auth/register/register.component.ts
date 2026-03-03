@@ -1,14 +1,34 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, type User } from '../../services/auth.service';
+import { API_PATHS } from '../../core/api/api.constants';
+
+/** Register API response shape (token/user at top level or under data) */
+interface RegisterApiResponse {
+  token?: string;
+  access_token?: string;
+  user?: User;
+  data?: { token?: string; access_token?: string; user?: User };
+}
 
 @Component({
   selector: 'app-register',
@@ -32,32 +52,40 @@ export class RegisterComponent {
   hidePassword = signal(true);
   hideConfirm = signal(true);
   errorMessage = signal('');
+  loading = signal(false);
 
   togglePassword(): void {
-    this.hidePassword.update(v => !v);
+    this.hidePassword.update((v) => !v);
   }
 
   toggleConfirm(): void {
-    this.hideConfirm.update(v => !v);
+    this.hideConfirm.update((v) => !v);
   }
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
+    private http: HttpClient,
   ) {
-    this.form = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), this.passwordStrength]],
-      confirmPassword: ['', [Validators.required]],
-      acceptTerms: [false, [Validators.requiredTrue]],
-    }, { validators: this.passwordMatch });
+    this.form = this.fb.group(
+      {
+        firstName: ['', [Validators.required, Validators.minLength(2)]],
+        lastName: ['', [Validators.required, Validators.minLength(2)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [Validators.required, Validators.minLength(8), this.passwordStrength],
+        ],
+        confirmPassword: ['', [Validators.required]],
+        acceptTerms: [false, [Validators.requiredTrue]],
+      },
+      { validators: this.passwordMatch },
+    );
   }
 
-  get isLoading() {
-    return this.auth.isLoading;
+  get isLoading(): boolean {
+    return this.loading();
   }
 
   private passwordStrength(control: AbstractControl): ValidationErrors | null {
@@ -88,13 +116,39 @@ export class RegisterComponent {
     }
 
     this.errorMessage.set('');
-    const { firstName, lastName, email, password } = this.form.value;
-    const result = await this.auth.register({ firstName, lastName, email, password });
+    this.loading.set(true);
+    const payload = {
+      name: `${this.form.value.firstName} ${this.form.value.lastName}`,
+      email: this.form.value.email,
+      password: this.form.value.password,
+    };
 
-    if (result.success) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.errorMessage.set(result.error || 'Registration failed.');
+    console.log('Register payload:', payload);
+
+    try {
+      const body = await firstValueFrom(
+        this.http.post<any>(API_PATHS.auth.register, payload),
+      );
+
+      console.log('Register response:', body);
+
+
+      
+
+      if (body) {
+        const data = body.data ?? body;
+        const token =
+          data.token ?? data.token ?? body.token ?? body.access_token;
+        const user = data.user ?? body.user;
+        if (token && user) {
+          this.auth.setSession(token, user);
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.errorMessage.set('Invalid response from server.');
+        }
+      }
+    } finally {
+      this.loading.set(false);
     }
   }
 

@@ -113,12 +113,14 @@
           }
         </div>
 
-        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading()">
-          @if (isLoading()) {
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="isLoading">
+          @if (isLoading) {
             <mat-spinner diameter="20"></mat-spinner>
           } @else {
-            Create Account
-            <mat-icon>arrow_forward</mat-icon>
+            <ng-container>
+              Create Account
+              <mat-icon>arrow_forward</mat-icon>
+            </ng-container>
           }
         </button>
       </form>
