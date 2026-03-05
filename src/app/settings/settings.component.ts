@@ -51,8 +51,8 @@ export class SettingsComponent {
   ) {
     const user = this.auth.user();
     this.profileForm = this.fb.group({
-      firstName: [user?.firstName || '', Validators.required],
-      lastName: [user?.lastName || '', Validators.required],
+      // firstName: [user?.firstName || '', Validators.required],
+      name: [user?.name || '', Validators.required],
       email: [user?.email || '', [Validators.required, Validators.email]],
       phone: [''],
       bio: [''],

@@ -5,41 +5,19 @@ import { firstValueFrom, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { API_PATHS } from '../core/api/api.constants';
-
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  avatar?: string;
-}
-
-export interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-export interface RegisterPayload {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-/** API auth response – supports common shapes: { token, user } or { data: { token, user } } */
-interface AuthApiResponse {
-  token?: string;
-  access_token?: string;
-  user?: User;
-  data?: { token?: string; access_token?: string; user?: User };
-}
+import type {
+  User,
+  LoginPayload,
+  RegisterPayload,
+  AuthApiResponse,
+} from '../interfaces/auth.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
-  private currentUser = signal<User | null>(this.loadUser());
+  private   currentUser = signal<User | null>(this.loadUser());
   private loading = signal(false);
 
   readonly user = this.currentUser.asReadonly();
@@ -47,11 +25,11 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.currentUser());
   readonly userInitials = computed(() => {
     const u = this.currentUser();
-    return u ? `${u.firstName[0]}${u.lastName[0]}`.toUpperCase() : '';
+    return u ? `${u.name.charAt(0)}`.toUpperCase() : '';
   });
   readonly fullName = computed(() => {
     const u = this.currentUser();
-    return u ? `${u.firstName} ${u.lastName}` : '';
+    return u ? u.name : '';
   });
 
   constructor(

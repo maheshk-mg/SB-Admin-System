@@ -19,16 +19,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AuthService, type User } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import type { RegisterApiResponse } from '../../interfaces/auth.interfaces';
 import { API_PATHS } from '../../core/api/api.constants';
-
-/** Register API response shape (token/user at top level or under data) */
-interface RegisterApiResponse {
-  token?: string;
-  access_token?: string;
-  user?: User;
-  data?: { token?: string; access_token?: string; user?: User };
-}
 
 @Component({
   selector: 'app-register',
@@ -123,29 +116,19 @@ export class RegisterComponent {
       password: this.form.value.password,
     };
 
-    console.log('Register payload:', payload);
-
     try {
       const body = await firstValueFrom(
-        this.http.post<any>(API_PATHS.auth.register, payload),
+        this.http.post<RegisterApiResponse>(
+          API_PATHS.auth.register,
+          payload,
+        ),
       );
 
-      console.log('Register response:', body);
-
-
-      
-
-      if (body) {
-        const data = body.data ?? body;
-        const token =
-          data.token ?? data.token ?? body.token ?? body.access_token;
-        const user = data.user ?? body.user;
-        if (token && user) {
-          this.auth.setSession(token, user);
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.errorMessage.set('Invalid response from server.');
-        }
+      if (body?.success && body.data?.token && body.data?.user) {
+        this.auth.setSession(body.data.token, body.data.user);
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.errorMessage.set('Invalid response from server.');
       }
     } finally {
       this.loading.set(false);
